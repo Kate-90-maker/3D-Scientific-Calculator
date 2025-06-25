@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>3D Scientific Calculator</title>
+    <style>
+      body {
+        background: #1e1e2f;
+        font-family: "Segoe UI", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .calculator {
+        background: #2d2d3a;
+        padding: 20px;
+        border-radius: 20px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        width: 400px;
+      }
+
+      .display {
+        background: #1a1a26;
+        color: #fff;
+        font-size: 1.8rem;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: right;
+        margin-bottom: 20px;
+        word-wrap: break-word;
+        min-height: 40px;
+      }
+
+      .buttons {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+      }
+
+      button {
+        font-size: 1.2rem;
+        padding: 15px;
+        background: #3a3a4d;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 5px #222;
+        cursor: pointer;
+        transition: 0.2s ease;
+      }
+
+      button:active {
+        transform: translateY(3px);
+        box-shadow: 0 2px #111;
+      }
+
+      .equal {
+        background: #2ecc71;
+      }
+
+      .clear {
+        background: #e74c3c;
+      }
+
+      .operator {
+        background: #ff8c42;
+      }
+
+      .sci {
+        background: #6c5ce7;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="calculator">
+      <div id="display" class="display">0</div>
+      <div class="buttons">
+        <button class="clear">C</button>
+        <button class="sci">π</button>
+        <button class="sci">e</button>
+        <button class="sci">√</button>
+        <button class="operator">←</button>
+
+        <button class="sci">sin</button>
+        <button class="sci">cos</button>
+        <button class="sci">tan</button>
+        <button class="sci">log</button>
+        <button class="sci">ln</button>
+
+        <button>7</button>
+        <button>8</button>
+        <button>9</button>
+        <button class="sci">x²</button>
+        <button class="operator">/</button>
+
+        <button>4</button>
+        <button>5</button>
+        <button>6</button>
+        <button class="operator">*</button>
+
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button class="operator">-</button>
+
+        <button>0</button>
+        <button>.</button>
+        <button class="equal">=</button>
+        <button class="operator">+</button>
+      </div>
+    </div>
+
+    <script>
+      const display = document.getElementById("display");
+      const buttons = document.querySelectorAll("button");
+      let current = "";
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const value = button.textContent;
+
+          if (value === "C") {
+            current = "";
+            display.textContent = "0";
+            return;
+          }
+
+          if (value === "←") {
+            current = current.slice(0, -1);
+            display.textContent = current || "0";
+            return;
+          }
+
+          if (value === "=") {
+            try {
+              const expr = current
+                .replace(/π/g, Math.PI)
+                .replace(/e/g, Math.E)
+                .replace(/√/g, "Math.sqrt")
+                .replace(/sin/g, "Math.sin")
+                .replace(/cos/g, "Math.cos")
+                .replace(/tan/g, "Math.tan")
+                .replace(/log/g, "Math.log10")
+                .replace(/ln/g, "Math.log")
+                .replace(/x²/g, "**2");
+
+              current = eval(expr).toString();
+              display.textContent = current;
+            } catch {
+              display.textContent = "Error";
+              current = "";
+            }
+            return;
+          }
+
+          // Append function with parentheses
+          if (["sin", "cos", "tan", "log", "ln", "√"].includes(value)) {
+            current += value + "(";
+          } else if (value === "x²") {
+            current += "**2";
+          } else {
+            current += value;
+          }
+
+          display.textContent = current;
+        });
+      });
+    </script>
+  </body>
+</html>
